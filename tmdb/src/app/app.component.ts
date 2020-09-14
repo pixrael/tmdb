@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ConfigurationsService } from './services/configurations/configurations.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'tmdb';
+  constructor(private configurationsService: ConfigurationsService) {
+    configurationsService.getConfigurations();
+  }
 }
