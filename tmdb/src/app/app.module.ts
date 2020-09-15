@@ -8,7 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 import { MovieResultsComponent } from './movie-results/movie-results.component';
@@ -29,7 +29,8 @@ import { MovieSearchComponent } from './movie-search/movie-search.component';
     MatButtonModule,
     MatTableModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

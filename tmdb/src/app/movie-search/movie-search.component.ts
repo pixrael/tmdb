@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-movie-search',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./movie-search.component.scss']
 })
 export class MovieSearchComponent implements OnInit {
-  value = 'Clear me';
+  keywordSearchControl = new FormControl('');
+
+  reactiveForm = new FormGroup({
+    keywordSearch: new FormControl('')
+  });
+
   constructor() { }
 
   ngOnInit(): void {
+    this.keywordSearchControl.valueChanges.subscribe(change => {
+      // Process input to search the keyboard
+    });
+  }
+
+  onClearButtonClicked(): void {
+    this.keywordSearchControl.setValue('');
   }
 
 }
