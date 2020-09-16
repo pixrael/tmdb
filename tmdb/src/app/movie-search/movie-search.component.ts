@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { SearchKeywordMovieRequestService } from '../services/search-keyword-movie/search-keyword-movie-request.service';
 
 @Component({
   selector: 'app-movie-search',
@@ -14,16 +15,20 @@ export class MovieSearchComponent implements OnInit {
     keywordSearch: new FormControl('')
   });
 
-  constructor() { }
+  constructor(private searchKeywordMovieRequestService: SearchKeywordMovieRequestService) { }
 
   ngOnInit(): void {
 
     this.keywordSearchControl.valueChanges.pipe(
       debounceTime(200),
-      map((value: string) => value.trim()), distinctUntilChanged(), filter((value: string) => value.length > 2))
-      .subscribe(change => {
-        // Process input to search the keyboard
-        console.log('sending change ', change);
+      map((value: string) => value.trim()),
+      distinctUntilChanged(),
+      filter((value: string) => value.length > 2),
+      switchMap((keyword: string) =>
+        this.searchKeywordMovieRequestService.searchKeyword(keyword)
+      ))
+      .subscribe((results: string) => {
+        console.log('results:', results);
       });
   }
 
