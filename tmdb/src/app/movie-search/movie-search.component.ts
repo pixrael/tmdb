@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { debounceTime, map, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { SearchKeywordMovieRequestService } from '../services/search-keyword-movie/search-keyword-movie-request.service';
+import { MovieDataService } from '../services/movie-data/movie-data.service';
 
 @Component({
   selector: 'app-movie-search',
@@ -15,7 +16,7 @@ export class MovieSearchComponent implements OnInit {
     keywordSearch: new FormControl('')
   });
 
-  constructor(private searchKeywordMovieRequestService: SearchKeywordMovieRequestService) { }
+  constructor(private searchKeywordMovieRequestService: SearchKeywordMovieRequestService, private movieDataService: MovieDataService) { }
 
   ngOnInit(): void {
 
@@ -28,7 +29,7 @@ export class MovieSearchComponent implements OnInit {
         this.searchKeywordMovieRequestService.searchKeyword(keyword)
       ))
       .subscribe((results: string) => {
-        console.log('results:', results);
+        this.movieDataService.setMovies(results);
       });
   }
 
