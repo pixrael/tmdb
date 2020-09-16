@@ -3,7 +3,7 @@ import { MovieDataService } from '../services/movie-data/movie-data.service';
 
 import { filter } from 'rxjs/operators';
 
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export interface ResultElement {
   title: string;
@@ -26,6 +26,9 @@ const ELEMENT_DATA: ResultElement[] = [
 export class MovieResultsComponent implements OnInit {
   displayedColumns: string[] = ['genre', 'title', 'releaseDate', 'poster'];
   dataSource = ELEMENT_DATA;
+
+  genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27]; // this should como its own request
+
   constructor(private movieDataService: MovieDataService) { }
 
   ngOnInit(): void {
@@ -33,13 +36,12 @@ export class MovieResultsComponent implements OnInit {
 
       console.log('results ', movies);
 
-      const genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27];
 
       const groupedMovies = _.groupBy(movies.results, (result) => {
 
         let resultGenreId = 0;
 
-        _.forEach(genresIds, genreId => {
+        _.forEach(this.genresIds, genreId => {
           if (result.genre_ids.some((gId) => gId === genreId)) {
             console.log('return ', genreId);
             resultGenreId = genreId;
@@ -50,8 +52,22 @@ export class MovieResultsComponent implements OnInit {
 
       });
 
+      console.log('groupedMovies ', groupedMovies);
+      this.mapGroupedMoviesToTable(groupedMovies);
     });
 
+  }
+
+  mapGroupedMoviesToTable(groupedMovies): void {
+    const mappedMovies = [];
+    this.genresIds.forEach(genreId => {
+      if (groupedMovies[genreId]) {
+        mappedMovies.push(...groupedMovies[genreId]);
+      }
+
+    });
+
+    this.dataSource = mappedMovies;
   }
 
 }
