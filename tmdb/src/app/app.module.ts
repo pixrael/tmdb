@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -32,6 +33,7 @@ import { MovieSearchComponent } from './movie-search/movie-search.component';
     MatTableModule,
     MatInputModule,
     MatIconModule,
+    MatPaginatorModule,
     ReactiveFormsModule
   ],
   providers: [],
