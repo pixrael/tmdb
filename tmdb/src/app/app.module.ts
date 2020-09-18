@@ -10,11 +10,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+
 import { ReactiveFormsModule } from '@angular/forms';
 
 
 import { MovieResultsComponent } from './movie-results/movie-results.component';
 import { MovieSearchComponent } from './movie-search/movie-search.component';
+import { InitDialogComponent } from './init-dialog/init-dialog/init-dialog.component';
 
 
 
@@ -22,7 +28,8 @@ import { MovieSearchComponent } from './movie-search/movie-search.component';
   declarations: [
     AppComponent,
     MovieResultsComponent,
-    MovieSearchComponent
+    MovieSearchComponent,
+    InitDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +41,9 @@ import { MovieSearchComponent } from './movie-search/movie-search.component';
     MatInputModule,
     MatIconModule,
     MatPaginatorModule,
+    MatCardModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule
   ],
   providers: [],

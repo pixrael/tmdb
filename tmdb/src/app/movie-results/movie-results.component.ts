@@ -41,6 +41,7 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
   constructor(private movieDataService: MovieDataService) { }
 
   ngOnInit(): void {
+
     this.movieDataService.getMovies$().pipe(filter(movies => !!movies)).subscribe(movies => {
 
       const movs = movies.results.map(movie => {

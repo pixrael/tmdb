@@ -1,0 +1,10 @@
+<div class="dialog-container" >
+   <h1 mat-dialog-title>Initial loading</h1>
+   <div mat-dialog-content>
+      {{caption}}
+      <div class="spinner-container" >
+         <mat-spinner  *ngIf="loading"></mat-spinner>  
+      </div>
+   </div>
+
+</div>
