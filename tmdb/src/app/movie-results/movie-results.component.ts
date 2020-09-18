@@ -5,8 +5,11 @@ import { filter } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
+import { GenreList, Configurations } from '../models/models';
 
-export interface PeriodicElement {
+
+
+export interface MovieElement {
   title: string;
   releaseDate: string;
   poster: string;
@@ -17,7 +20,7 @@ export interface GroupBy {
   isGroupBy: boolean;
 }
 
-const ELEMENT_DATA: (PeriodicElement | GroupBy)[] = [];
+const ELEMENT_DATA: (MovieElement | GroupBy)[] = [];
 
 @Component({
   selector: 'app-movie-results',
@@ -26,12 +29,13 @@ const ELEMENT_DATA: (PeriodicElement | GroupBy)[] = [];
 })
 export class MovieResultsComponent implements OnInit, AfterViewInit {
 
-  dataSource = new MatTableDataSource<PeriodicElement | GroupBy>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<MovieElement | GroupBy>(ELEMENT_DATA);
   displayedColumns: string[] = ['title', 'releaseDate', 'poster'];
+  groupColums: string[] = ['groupHeader'];
   posterPath: string;
   private genresIds: number[];
-  private genreList;
-  private configurations;
+  private genreList: GenreList;
+  private configurations: Configurations;
 
   constructor(private movieDataService: MovieDataService) { }
 
