@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MovieDataService } from '../services/movie-data/movie-data.service';
 
-import { filter, flatMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+  title: string;
+  releaseDate: string;
+  poster: string;
 }
 
 export interface GroupBy {
@@ -29,15 +27,9 @@ const ELEMENT_DATA: (PeriodicElement | GroupBy)[] = [];
 export class MovieResultsComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<PeriodicElement | GroupBy>(ELEMENT_DATA);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-
   displayedColumns: string[] = ['title', 'releaseDate', 'poster'];
-
-  posterPath = 'https://image.tmdb.org/t/p/w500/';
-
-  private genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27]; // this should como its own request
+  posterPath: string;
+  private genresIds: number[];
   private genreList;
   private configurations;
 
@@ -64,7 +56,7 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
         };
       });
 
-      const groupedData = this.groupByGenreIds(this.genresIds, movs);
+      const groupedData = this.groupByGenreIds(this.genreList.genres, movs);
 
       this.dataSource = groupedData;
 
@@ -76,9 +68,7 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
     return item.isGroupBy;
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
+  ngAfterViewInit(): void { }
 
 
   mapGroupedMoviesToTable(groupedMovies): void {
@@ -93,18 +83,17 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
   }
 
   private groupByGenreIds(genres, entries): any {
-
     const result = {};
 
     entries.forEach(entry => {
 
       genres.forEach(genre => {
-        if (entry.genreIds.some(genreId => genreId === genre)) {
-          if (!result[genre]) {
-            result[genre] = [];
+        if (entry.genreIds.some(genreId => genreId === genre.id)) {
+          if (!result[genre.id]) {
+            result[genre.id] = [];
           }
 
-          result[genre].push({ genreId: genre, ...entry });
+          result[genre.id].push({ genreId: genre.id, ...entry });
         }
       });
 
@@ -115,11 +104,16 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
 
     genres.forEach(genre => {
 
-      if (result[genre]) {
-        const nameGenre = this.genreList.genres.find(gen => gen.id === genre).name;
+      if (result[genre.id]) {
+        const foundGenre = this.genreList.genres.find(gen => gen.id === genre.id);
+        if (foundGenre) {
+          const nameGenre = foundGenre.name;
 
-        dataSource.push({ isGroupBy: true, group: nameGenre });
-        dataSource.push(...result[genre]);
+          dataSource.push({ isGroupBy: true, group: nameGenre });
+          dataSource.push(...result[genre.id]);
+
+        }
+
       }
     });
 
