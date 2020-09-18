@@ -12,6 +12,7 @@ import { MovieDataService } from './services/movie-data/movie-data.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  initDataLoaded = false;
   constructor(
     public dialog: MatDialog,
     private genreMovieRequestService: GenreMovieRequestService,
@@ -25,7 +26,10 @@ export class AppComponent {
         genreList: {
           genreList$: this.genreMovieRequestService.searchGenres(),
           caption: 'Movie genres',
-          onComplete: (genreList) => { this.movieDataService.setGenreList(genreList) }
+          onComplete: (genreList) => {
+            this.movieDataService.setGenreList(genreList);
+            this.initDataLoaded = true;
+          }
         }
 
       },

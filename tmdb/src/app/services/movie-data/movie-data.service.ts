@@ -9,8 +9,7 @@ export class MovieDataService {
   private moviesSource = new BehaviorSubject<any>(null);
   private movies$ = this.moviesSource.asObservable();
 
-  private genreListSource = new BehaviorSubject<any>(null);
-  private genreList$ = this.genreListSource.asObservable();
+  private genreList;
 
 
   constructor() { }
@@ -24,11 +23,11 @@ export class MovieDataService {
   }
 
   setGenreList(genreList): void {
-    this.genreListSource.next(genreList);
+    this.genreList = genreList;
   }
 
-  getGenreList$(): Observable<any> {
-    return this.genreList$;
+  getGenreList(): any {
+    return this.genreList;
   }
 
 }

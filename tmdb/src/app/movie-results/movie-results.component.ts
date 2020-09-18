@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MovieDataService } from '../services/movie-data/movie-data.service';
 
-import { filter } from 'rxjs/operators';
+import { filter, flatMap } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
@@ -36,11 +36,16 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['title', 'releaseDate', 'poster'];
 
 
-  genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27]; // this should como its own request 
+  private genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27]; // this should como its own request
+
+  private genreList;
 
   constructor(private movieDataService: MovieDataService) { }
 
   ngOnInit(): void {
+
+    this.genreList = this.movieDataService.getGenreList();
+
 
     this.movieDataService.getMovies$().pipe(filter(movies => !!movies)).subscribe(movies => {
 
@@ -105,7 +110,11 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
     genres.forEach(genre => {
 
       if (result[genre]) {
-        dataSource.push({ isGroupBy: true, group: genre });
+        console.log('this.genreList ', this.genreList);
+
+        const nameGenre = this.genreList.genres.find(gen => gen.id === genre).name;
+
+        dataSource.push({ isGroupBy: true, group: nameGenre });
         dataSource.push(...result[genre]);
       }
     });
