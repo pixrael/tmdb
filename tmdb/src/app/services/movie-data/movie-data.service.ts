@@ -1,41 +1,42 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ResultData, GenreList, Configurations } from 'src/app/models/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieDataService {
 
-  private moviesSource = new BehaviorSubject<any>(null);
+  private moviesSource = new BehaviorSubject<ResultData>(null);
   private movies$ = this.moviesSource.asObservable();
 
-  private genreList;
-  private configurations;
+  private genreList: GenreList;
+  private configurations: Configurations;
 
 
   constructor() { }
 
-  setMovies(movies): void {
+  setMovies(movies: ResultData): void {
     this.moviesSource.next(movies);
   }
 
-  getMovies$(): Observable<any> {
+  getMovies$(): Observable<ResultData> {
     return this.movies$;
   }
 
-  setGenreList(genreList): void {
+  setGenreList(genreList: GenreList): void {
     this.genreList = genreList;
   }
 
-  getGenreList(): any {
+  getGenreList(): GenreList {
     return this.genreList;
   }
 
-  setConfigurations(configurations): void {
+  setConfigurations(configurations: Configurations): void {
     this.configurations = configurations;
   }
 
-  getConfigurations(): any {
+  getConfigurations(): Configurations {
     return this.configurations;
   }
 

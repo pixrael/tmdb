@@ -1,26 +1,20 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MovieDataService } from '../services/movie-data/movie-data.service';
 
 import { filter } from 'rxjs/operators';
 
-import * as _ from 'lodash';
-import { MatTableDataSource } from '@angular/material/table';
-import { GenreList, Configurations } from '../models/models';
-
-
+import { GenreList, Configurations, Genre, Result } from '../models/models';
 
 export interface MovieElement {
   title: string;
-  releaseDate: string;
-  poster: string;
+  release_date: string;
+  poster_path: string;
 }
 
 export interface GroupBy {
   group: string;
   isGroupBy: boolean;
 }
-
-const ELEMENT_DATA: (MovieElement | GroupBy)[] = [];
 
 @Component({
   selector: 'app-movie-results',
@@ -29,7 +23,7 @@ const ELEMENT_DATA: (MovieElement | GroupBy)[] = [];
 })
 export class MovieResultsComponent implements OnInit, AfterViewInit {
 
-  dataSource = new MatTableDataSource<MovieElement | GroupBy>(ELEMENT_DATA);
+  dataSource: (MovieElement | GroupBy)[];
   displayedColumns: string[] = ['title', 'releaseDate', 'poster'];
   groupColums: string[] = ['groupHeader'];
   posterPath: string;
@@ -51,24 +45,14 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
 
     this.movieDataService.getMovies$().pipe(filter(movies => !!movies)).subscribe(movies => {
 
-      const movs = movies.results.map(movie => {
-        return {
-          releaseDate: movie.release_date,
-          title: movie.title,
-          poster: movie.poster_path,
-          genreIds: movie.genre_ids,
-        };
-      });
+      const resultsGrouped = this.groupByGenreIds(this.genreList.genres, movies.results);
 
-      const groupedData = this.groupByGenreIds(this.genreList.genres, movs);
-
-      this.dataSource = groupedData;
-
+      this.dataSource = this.mapToTableFormat(this.genreList.genres, resultsGrouped);
     });
 
   }
 
-  isGroup(index, item): boolean {
+  isGroup(index: number, item: GroupBy): boolean {
     return item.isGroupBy;
   }
 
@@ -86,43 +70,42 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
 
   }
 
-  private groupByGenreIds(genres, entries): any {
-    const result = {};
+  private groupByGenreIds(genres: Genre[], results: Result[]): any {
+    const groupedResults: { [key: number]: Result[] } = {};
 
-    entries.forEach(entry => {
+    results.forEach(result => {
 
       genres.forEach(genre => {
-        if (entry.genreIds.some(genreId => genreId === genre.id)) {
-          if (!result[genre.id]) {
-            result[genre.id] = [];
+        if (result.genre_ids.some(genreId => genreId === genre.id)) {
+          if (!groupedResults[genre.id]) {
+            groupedResults[genre.id] = [];
           }
 
-          result[genre.id].push({ genreId: genre.id, ...entry });
+          groupedResults[genre.id].push({ ...result });
         }
       });
 
     });
 
+    return groupedResults;
+  }
 
-    const dataSource = [];
+  private mapToTableFormat(genres: Genre[], groupedResults: { [key: number]: Result[] }): (MovieElement | GroupBy)[] {
+    const dataSource: (MovieElement | GroupBy)[] = [];
 
     genres.forEach(genre => {
 
-      if (result[genre.id]) {
-        const foundGenre = this.genreList.genres.find(gen => gen.id === genre.id);
+      if (groupedResults[genre.id]) {
+        const foundGenre = genres.find(gen => gen.id === genre.id);
         if (foundGenre) {
           const nameGenre = foundGenre.name;
 
           dataSource.push({ isGroupBy: true, group: nameGenre });
-          dataSource.push(...result[genre.id]);
-
+          dataSource.push(...groupedResults[genre.id]);
         }
-
       }
     });
 
-
     return dataSource;
-
   }
 }

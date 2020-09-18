@@ -3,6 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { debounceTime, map, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { SearchKeywordMovieRequestService } from '../services/search-keyword-movie/search-keyword-movie-request.service';
 import { MovieDataService } from '../services/movie-data/movie-data.service';
+import { ResultData } from '../models/models';
 
 @Component({
   selector: 'app-movie-search',
@@ -28,7 +29,7 @@ export class MovieSearchComponent implements OnInit {
       switchMap((keyword: string) =>
         this.searchKeywordMovieRequestService.searchKeyword(keyword)
       ))
-      .subscribe((results: string) => {
+      .subscribe((results: ResultData) => {
         this.movieDataService.setMovies(results);
       });
   }
