@@ -10,6 +10,7 @@ export class MovieDataService {
   private movies$ = this.moviesSource.asObservable();
 
   private genreList;
+  private configurations;
 
 
   constructor() { }
@@ -28,6 +29,14 @@ export class MovieDataService {
 
   getGenreList(): any {
     return this.genreList;
+  }
+
+  setConfigurations(configurations): void {
+    this.configurations = configurations;
+  }
+
+  getConfigurations(): any {
+    return this.configurations;
   }
 
 }

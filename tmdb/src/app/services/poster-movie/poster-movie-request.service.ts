@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { baseUrl, apiKey } from '../../../constants';
+import { baseUrl, apiKey } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigurationRequestService {
+export class PosterMovieRequestService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getConfigurations(): Observable<any> {
-    return this.httpClient.get(`${baseUrl}/configuration?api_key=${apiKey}`);
+  searchGenres(): Observable<any> {
+    return this.httpClient.get(`${baseUrl}/genre/movie/list?api_key=${apiKey}&language=en-US`);
   }
 }

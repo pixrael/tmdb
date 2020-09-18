@@ -16,7 +16,7 @@
      <!-- Poster Column -->
      <ng-container matColumnDef="poster">
        <th mat-header-cell *matHeaderCellDef> Poster </th>
-       <td mat-cell *matCellDef="let element"> {{element.poster}} </td>
+       <td mat-cell *matCellDef="let element"><img class="poster-img" [src]="posterPath + element.poster"/></td>
      </ng-container>
      
 

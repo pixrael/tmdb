@@ -1,12 +1,17 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 export interface DialogData {
+  configurations: {
+    configurations$: Observable<any>;
+    caption: string;
+    onComplete: any
+  };
   genreList: {
-    genreList$: Observable<any>,
-    caption: string,
+    genreList$: Observable<any>;
+    caption: string;
     onComplete: any
   }
 }
@@ -25,8 +30,28 @@ export class InitDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.caption = 'Loading ' + this.data.genreList.caption;
-    setTimeout(() => {
+    this.caption = 'Loading ' + this.data.configurations.caption + ' and ' + this.data.genreList.caption;
+
+    forkJoin({
+      configurations: this.data.configurations.configurations$.pipe(filter(c => !!c)),
+      genreList: this.data.genreList.genreList$.pipe(filter(g => !!g))
+    }).subscribe(({ configurations, genreList }) => {
+
+      this.data.configurations.onComplete(configurations);
+      this.data.genreList.onComplete(genreList);
+
+      this.caption = 'Loaded ' + this.data.configurations.caption + ' and ' + this.data.genreList.caption;
+
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 2000);
+    });
+
+
+    /* setTimeout(() => {
+
+
+
       this.data.genreList.genreList$.pipe(filter(g => !!g)).subscribe(g => {
         this.loading = false;
         this.caption = 'Loaded ' + this.data.genreList.caption;
@@ -37,7 +62,7 @@ export class InitDialogComponent implements OnInit {
         }, 2000);
       });
 
-    }, 2000);
+    }, 2000); */
 
 
   }

@@ -35,16 +35,22 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['title', 'releaseDate', 'poster'];
 
+  posterPath = 'https://image.tmdb.org/t/p/w500/';
 
   private genresIds = [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27]; // this should como its own request
-
   private genreList;
+  private configurations;
 
   constructor(private movieDataService: MovieDataService) { }
 
   ngOnInit(): void {
 
     this.genreList = this.movieDataService.getGenreList();
+    this.configurations = this.movieDataService.getConfigurations();
+
+    const posterBaseUrl = this.configurations.images.base_url;
+    const posterMinSize = this.configurations.images.poster_sizes[0];
+    this.posterPath = posterBaseUrl + posterMinSize + '/';
 
 
     this.movieDataService.getMovies$().pipe(filter(movies => !!movies)).subscribe(movies => {
@@ -110,8 +116,6 @@ export class MovieResultsComponent implements OnInit, AfterViewInit {
     genres.forEach(genre => {
 
       if (result[genre]) {
-        console.log('this.genreList ', this.genreList);
-
         const nameGenre = this.genreList.genres.find(gen => gen.id === genre).name;
 
         dataSource.push({ isGroupBy: true, group: nameGenre });
