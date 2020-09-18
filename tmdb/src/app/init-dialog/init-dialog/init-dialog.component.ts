@@ -47,24 +47,6 @@ export class InitDialogComponent implements OnInit {
       }, 2000);
     });
 
-
-    /* setTimeout(() => {
-
-
-
-      this.data.genreList.genreList$.pipe(filter(g => !!g)).subscribe(g => {
-        this.loading = false;
-        this.caption = 'Loaded ' + this.data.genreList.caption;
-        this.data.genreList.onComplete(g);
-
-        setTimeout(() => {
-          this.dialogRef.close();
-        }, 2000);
-      });
-
-    }, 2000); */
-
-
   }
 
 }
